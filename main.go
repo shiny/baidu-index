@@ -20,7 +20,6 @@ type APIResponse struct {
 func main() {
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
-		
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "https://tools.meettea.com")
 		url := c.Query("url")
 		if url == "" {
@@ -28,13 +27,13 @@ func main() {
   		return
 		}
 		body := request(url)
-		indexed := hasIndexed(url, body)
-		c.JSON(200, indexed)
+		response := query(url, body)
+		c.JSON(200, response)
 	})
 	r.Run(":7002")
 }
 
-func hasIndexed(url string, body string) APIResponse {
+func query(url string, body string) APIResponse {
 	pos := strings.Index(body, "class=\"content_none\"")
 	if pos  > -1 {
 		return APIResponse { "", false }
